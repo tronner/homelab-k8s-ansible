@@ -1,0 +1,11 @@
+---
+ansible_python_interpreter: /usr/bin/python3
+k8s_version: 1.23.2
+cri_o_version: 1.23.0
+k8s_subnet_cidr: "10.96.0.0/16"
+k8s_dns_domain: "cluster.local"
+unqualified_search_registries:
+  - docker.io
+kubevirt_version: v0.49.0
+multus_version: v3.8
+calico_version: v3.21.4

@@ -1,0 +1,54 @@
+---
+- name: check input
+  assert:
+    that:
+      - cri_o_version is defined
+      - unqualified_search_registries is defined
+
+- name: set up to load kernel modules at boot
+  copy:
+    content: "{{ '\n'.join(cri_o_kernel_modules) + '\n' }}"
+    dest: /etc/modules-load.d/10-cri-o.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: load cri-o kernel modules
+
+- name: sysctl values
+  copy:
+    content: |
+      net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.ipv4.ip_forward = 1
+    dest: /etc/sysctl.d/10-cri-o.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload sysctl
+
+- name: install
+  shell: curl https://raw.githubusercontent.com/cri-o/cri-o/main/scripts/get | bash -s -- -t v{{ cri_o_version }}
+  args:
+    creates: /usr/local/bin/crio
+
+- name: delete bridge network plugin configuration
+  file:
+    path: /etc/cni/net.d/10-crio-bridge.conf
+    state: absent
+
+- name: service
+  service:
+    name: crio
+    enabled: True
+    state: started
+
+- name: registries.conf
+  template:
+    src: registries.conf.j2
+    dest: /etc/containers/registries.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload crio
+
+- meta: flush_handlers

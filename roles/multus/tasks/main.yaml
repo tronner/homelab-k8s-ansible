@@ -1,0 +1,8 @@
+---
+- name: check input
+  assert:
+    that:
+      - multus_version is defined
+
+- name: install multus daemonset
+  shell: curl -s https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/{{ multus_version }}/images/multus-daemonset.yml | kubectl apply -f -

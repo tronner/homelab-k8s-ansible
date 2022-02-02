@@ -1,0 +1,30 @@
+---
+- name: check input
+  assert:
+    that:
+      - zfs_pool_devs is defined
+      - zfs_pool_devs is iterable
+      - zfs_pool_devs is not string
+      - zfs_pool_devs is not mapping
+      - zfs_pool_devs != []
+
+- name: packages
+  apt:
+    name: zfsutils-linux
+
+- name: load zfs kernel module
+  community.general.modprobe:
+    name: zfs
+
+# Now I am become death, the destroyer of data
+- name: create zpool
+  shell: |
+    zpool list data || zpool create \
+      -f \
+      -o ashift=12 \
+      -O compression=lz4 \
+      -O atime=off \
+      data \
+      {{ zfs_pool_devs|join(' ') }}
+  register: zpool_create
+  changed_when: zpool_create.stdout == ""

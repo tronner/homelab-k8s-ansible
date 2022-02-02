@@ -1,0 +1,4 @@
+---
+- name: load zfs kernel module
+  community.general.modprobe:
+    name: zfs

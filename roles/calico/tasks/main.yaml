@@ -1,0 +1,25 @@
+---
+- name: check input
+  assert:
+    that:
+      - k8s_subnet_cidr is defined
+      - calico_version
+
+- name: copy manifest
+  template:
+    src: calico.yaml.j2
+    dest: /root/calico.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apply manifest
+  command: kubectl apply -f /root/calico.yaml
+
+- name: calicoctl
+  get_url:
+    url: https://github.com/projectcalico/calico/releases/download/{{ calico_version }}/calicoctl-linux-amd64
+    dest: /usr/local/bin/calicoctl
+    owner: root
+    group: root
+    mode: 0755

@@ -1,0 +1,4 @@
+---
+cri_o_kernel_modules:
+  - overlay
+  - br_netfilter

@@ -1,0 +1,22 @@
+---
+- name: install openebs
+  command: kubectl apply -f https://openebs.github.io/charts/openebs-operator.yaml
+
+- name: install openebs zfs-operator
+  command: kubectl apply -f https://openebs.github.io/charts/zfs-operator.yaml
+
+- name: zfs filesystem
+  community.general.zfs:
+    name: data/pv
+    state: present
+
+- name: storageclass manifests
+  copy:
+    src: zfspv-sc.yaml
+    dest: /root/zfspv-sc.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install storageclass
+  command: kubectl apply -f /root/zfspv-sc.yaml

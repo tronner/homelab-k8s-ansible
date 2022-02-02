@@ -1,0 +1,29 @@
+---
+- name: debian apt sources with contrib and non-free
+  copy:
+    src: sources.list
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apt upgrades
+  apt:
+    update_cache: True
+    upgrade: dist
+
+- name: packages
+  apt:
+    name:
+      - needrestart
+      - curl
+      - jq
+
+- name: check if reboot required
+  shell: needrestart -rl -b | awk '$1 == "NEEDRESTART-KSTA:" { print $2 }'
+  register: kernelstatus
+  changed_when: kernelstatus.stdout == "2" or kernelstatus.stdout == "3"
+  notify: reboot
+
+- name: flush handlers
+  meta: flush_handlers

@@ -1,0 +1,12 @@
+---
+- name: load cri-o kernel modules
+  command: modprobe {{ item }}
+  loop: "{{ cri_o_kernel_modules }}"
+
+- name: reload sysctl
+  command: sysctl --system
+
+- name: reload crio
+  service:
+    name: crio
+    state: reloaded
