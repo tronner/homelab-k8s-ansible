@@ -1,0 +1,11 @@
+---
+- name: copy webhook-transip manifest
+  copy:
+    src: webhooks/transip/webhook-transip.yaml
+    dest: /root/webhook-transip.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apply webhook-transip manifest
+  command: kubectl apply -f /root/webhook-transip.yaml

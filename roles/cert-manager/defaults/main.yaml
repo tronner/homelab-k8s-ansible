@@ -1,0 +1,4 @@
+---
+cert_manager_webhooks: []
+cert_manager_secrets: []
+cert_manager_cluster_issuers: []

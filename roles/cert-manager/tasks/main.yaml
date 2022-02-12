@@ -1,0 +1,33 @@
+---
+- name: check input
+  assert:
+    that:
+      - cert_manager_version is defined
+  tags:
+    - check_input
+
+- name: install cert-manager
+  command: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
+
+- name: wait for webhook deployment to be finished
+  command: kubectl -n cert-manager rollout status deploy/cert-manager-webhook
+
+- name: install cert-manager webhooks
+  include_tasks: "webhooks/{{ item }}.yaml"
+  loop: "{{ cert_manager_webhooks }}"
+    
+- name: create cert-manager secrets
+  include_tasks: secret.yaml
+  vars:
+    secret: "{{ item }}"
+  loop: "{{ cert_manager_secrets }}"
+  tags:
+    - check_input
+
+- name: create cluster issuers
+  include_tasks: clusterissuer.yaml
+  vars:
+    clusterissuer: "{{ item }}"
+  loop: "{{ cert_manager_clusterissuers }}"
+  tags:
+    - check_input

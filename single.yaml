@@ -14,5 +14,7 @@
       tags: calico
     - role: openebs
       tags: openebs
+    - role: cert-manager
+      tags: cert-manager
     - role: kubevirt
       tags: kubevirt

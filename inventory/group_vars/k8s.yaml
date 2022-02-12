@@ -9,3 +9,55 @@ unqualified_search_registries:
 kubevirt_version: v0.49.0
 multus_version: v3.8
 calico_version: v3.21.4
+cert_manager_version: v1.7.1
+cert_manager_webhooks:
+  - gandi
+  - transip
+cert_manager_secrets:
+  - name: gandi-credentials
+    file: /root/gandi-api-token
+    key: api-token
+  - name: transip-credentials
+    file: /root/transip-privateKey
+    key: privateKey
+cert_manager_clusterissuers:
+  - name: le-staging
+    manifest: |
+      apiVersion: cert-manager.io/v1
+      kind: ClusterIssuer
+      metadata:
+        name: le-staging
+      spec:
+        acme:
+          # The ACME server URL
+          server: https://acme-staging-v02.api.letsencrypt.org/directory
+          # Email address used for ACME registration
+          email: thomas@ronner.org
+          # Name of a secret used to store the ACME account private key
+          privateKeySecretRef:
+            name: le-staging-issuer-key
+          solvers:
+          - selector:
+              dnsZones:
+                - ronner.org
+            dns01:
+              webhook:
+                groupName: acme.bwolf.me
+                solverName: gandi
+                config:
+                  apiKeySecretRef:
+                    key: api-token
+                    name: gandi-credentials
+          - selector:
+              dnsZones:
+                - tronner.nl
+            dns01:
+              webhook:
+                groupName: cert-manager.webhook.transip
+                solverName: transip
+                config:
+                  accountName: tronner
+                  ttl: 300
+                  privateKeySecretRef:
+                    name: transip-credentials
+                    key: privateKey

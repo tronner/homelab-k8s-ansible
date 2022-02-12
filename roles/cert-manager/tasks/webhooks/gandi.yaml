@@ -1,0 +1,11 @@
+---
+- name: copy webhook-gandi manifest
+  copy:
+    src: webhooks/gandi/webhook-gandi.yaml
+    dest: /root/webhook-gandi.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apply webhook-gandi manifest
+  command: kubectl apply -f /root/webhook-gandi.yaml

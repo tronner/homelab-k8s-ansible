@@ -1,0 +1,19 @@
+---
+- name: check input
+  assert:
+    that:
+      - clusterissuer.name is defined
+      - clusterissuer.manifest is defined
+  tags:
+    - check_input
+
+- name: copy clusterissuer manifeset
+  copy:
+    content: "{{ clusterissuer.manifest }}"
+    dest: /root/{{ clusterissuer.name }}.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apply clusterissuer manifest
+  command: kubectl apply -f /root/{{ clusterissuer.name }}.yaml
