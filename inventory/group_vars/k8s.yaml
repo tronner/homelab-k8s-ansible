@@ -61,3 +61,12 @@ cert_manager_clusterissuers:
                   privateKeySecretRef:
                     name: transip-credentials
                     key: privateKey
+ingress_nginx_certificates:
+  - name: wildcard-staging
+    domainNames:
+      - "ronner.org"
+      - "*.ronner.org"
+      - "tronner.nl"
+      - "*.tronner.nl"
+    issuer: le-staging
+    issuerType: ClusterIssuer

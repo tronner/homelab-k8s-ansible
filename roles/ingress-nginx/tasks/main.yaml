@@ -1,0 +1,26 @@
+---
+- name: check input
+  assert:
+    that:
+      - ingress_nginx_certificates is iterable
+  tags:
+    - check_input
+
+- name: copy manifest
+  copy:
+    src: ingress-nginx.yaml
+    dest: /root/ingress-nginx.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apply manifest
+  command: kubectl apply -f /root/ingress-nginx.yaml
+
+- name: certificate tasks
+  include_tasks: certificate.yaml
+  vars:
+    certificate: "{{ item }}"
+  loop: "{{ ingress_nginx_certificates }}"
+  tags:
+    - check_input

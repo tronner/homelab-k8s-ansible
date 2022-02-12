@@ -18,3 +18,5 @@
       tags: cert-manager
     - role: kubevirt
       tags: kubevirt
+    - role: ingress-nginx
+      tags: ingress-nginx

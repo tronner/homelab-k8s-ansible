@@ -1,0 +1,22 @@
+---
+- name: check input
+  assert:
+    that:
+      - certificate.name is defined
+      - certificate.issuer is defined
+      - certificate.issuerType is defined
+      - certificate.issuerType is iterable
+      - certificate.issuerType in ["Issuer", "ClusterIssuer"]
+  tags:
+    - check_input
+
+- name: certificate manifest from template
+  template:
+    src: certificate.yaml.j2
+    dest: /root/ingress-nginx-certificate-{{ certificate.name }}.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apply certificate manifest
+  command: kubectl -n ingress-nginx apply -f /root/ingress-nginx-certificate-{{ certificate.name }}.yaml
