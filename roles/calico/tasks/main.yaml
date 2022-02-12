@@ -4,6 +4,8 @@
     that:
       - k8s_subnet_cidr is defined
       - calico_version
+  tags:
+    - check_input
 
 - name: copy manifest
   template:

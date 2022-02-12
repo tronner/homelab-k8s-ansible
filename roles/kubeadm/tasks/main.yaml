@@ -5,6 +5,8 @@
     - k8s_version is defined
     - k8s_subnet_cidr is defined
     - k8s_dns_domain is defined
+  tags:
+    - check_input
 
 - name: packages
   apt:

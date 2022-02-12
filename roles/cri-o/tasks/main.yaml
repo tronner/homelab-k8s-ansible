@@ -4,6 +4,8 @@
     that:
       - cri_o_version is defined
       - unqualified_search_registries is defined
+  tags:
+    - check_input
 
 - name: set up to load kernel modules at boot
   copy:

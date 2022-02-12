@@ -7,6 +7,8 @@
       - zfs_pool_devs is not string
       - zfs_pool_devs is not mapping
       - zfs_pool_devs != []
+  tags:
+    - check_input
 
 - name: packages
   apt:
