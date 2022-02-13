@@ -16,7 +16,9 @@
       tags: openebs
     - role: cert-manager
       tags: cert-manager
-    - role: kubevirt
-      tags: kubevirt
     - role: ingress-nginx
       tags: ingress-nginx
+    - role: metallb
+      tags: metallb
+    - role: kubevirt
+      tags: kubevirt

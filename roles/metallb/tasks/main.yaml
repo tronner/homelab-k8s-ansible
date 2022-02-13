@@ -1,0 +1,25 @@
+---
+- name: check input
+  assert:
+    that:
+      - metallb_version is defined
+      - metallb_addresses is defined
+  tags:
+    - check_input
+
+- name: apply manifests
+  command: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/{{ metallb_version }}/manifests/{{ item }}
+  loop:
+    - namespace.yaml
+    - metallb.yaml
+
+- name: copy configmap
+  template:
+    src: config.yaml.j2
+    dest: /root/metallb-config.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: apply configmap
+  command: kubectl apply -f /root/metallb-config.yaml

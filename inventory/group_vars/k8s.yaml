@@ -71,3 +71,5 @@ ingress_nginx_certificates:
     issuer: le-staging
     issuerType: ClusterIssuer
 ingress_nginx_default_ssl_certificate: ingress-nginx/wildcard-staging-tls
+metallb_version: v0.11.0
+metallb_addresses: 10.3.49.30-10.3.49.49
