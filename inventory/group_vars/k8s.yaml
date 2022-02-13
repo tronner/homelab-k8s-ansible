@@ -61,6 +61,47 @@ cert_manager_clusterissuers:
                   privateKeySecretRef:
                     name: transip-credentials
                     key: privateKey
+  - name: le-prod
+    manifest: |
+      apiVersion: cert-manager.io/v1
+      kind: ClusterIssuer
+      metadata:
+        name: le-prod
+      spec:
+        acme:
+          # The ACME server URL
+          server: https://acme-v02.api.letsencrypt.org/directory
+          preferredChain: "ISRG Root X1"
+          # Email address used for ACME registration
+          email: thomas@ronner.org
+          # Name of a secret used to store the ACME account private key
+          privateKeySecretRef:
+            name: le-prod-issuer-key
+          solvers:
+          - selector:
+              dnsZones:
+                - ronner.org
+            dns01:
+              webhook:
+                groupName: acme.bwolf.me
+                solverName: gandi
+                config:
+                  apiKeySecretRef:
+                    key: api-token
+                    name: gandi-credentials
+          - selector:
+              dnsZones:
+                - tronner.nl
+            dns01:
+              webhook:
+                groupName: cert-manager.webhook.transip
+                solverName: transip
+                config:
+                  accountName: tronner
+                  ttl: 300
+                  privateKeySecretRef:
+                    name: transip-credentials
+                    key: privateKey
 ingress_nginx_certificates:
   - name: wildcard-staging
     domainNames:
@@ -70,6 +111,14 @@ ingress_nginx_certificates:
       - "*.tronner.nl"
     issuer: le-staging
     issuerType: ClusterIssuer
-ingress_nginx_default_ssl_certificate: ingress-nginx/wildcard-staging-tls
+  - name: wildcard-prod
+    domainNames:
+      - "ronner.org"
+      - "*.ronner.org"
+      - "tronner.nl"
+      - "*.tronner.nl"
+    issuer: le-prod
+    issuerType: ClusterIssuer
+ingress_nginx_default_ssl_certificate: ingress-nginx/wildcard-prod-tls
 metallb_version: v0.11.0
 metallb_addresses: 10.3.49.30-10.3.49.49
