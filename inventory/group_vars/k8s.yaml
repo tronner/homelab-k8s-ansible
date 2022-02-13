@@ -70,3 +70,4 @@ ingress_nginx_certificates:
       - "*.tronner.nl"
     issuer: le-staging
     issuerType: ClusterIssuer
+ingress_nginx_default_ssl_certificate: ingress-nginx/wildcard-staging-tls

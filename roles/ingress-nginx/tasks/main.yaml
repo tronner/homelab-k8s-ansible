@@ -7,8 +7,8 @@
     - check_input
 
 - name: copy manifest
-  copy:
-    src: ingress-nginx.yaml
+  template:
+    src: ingress-nginx.yaml.j2
     dest: /root/ingress-nginx.yaml
     owner: root
     group: root
